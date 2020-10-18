@@ -5,11 +5,11 @@ function abrir(event){
         reader.onload = function(e){
             let contenido = e.target.result;
             var lines = contenido.split('\n');
+            document.getElementById('contenido').innerText = contenido;
+            document.getElementById('resultado').innerText = "Todo malo :D";
             for (i = 0; i<lines.length; i++){
               comprobar(lines[i].split(" "));
             }
-            document.getElementById('contenido').innerText = contenido;
-            document.getElementById('resultado').innerText = "Todo malo :D";
         }
         reader.readAsText(archivo);
     }else{
@@ -20,28 +20,6 @@ function abrir(event){
 window.addEventListener("load",()=>{
     document.getElementById("loader").addEventListener("change",abrir)    
 })
-
-/***************************************************************************************************
- * CONVERTIR LINEA DE TEXTO EN LIGA
- */
-function convertirLiga(r){
-  var tipo = ["char", "int", "float", "bit", "boolean"];
-  var separador = [",", ";", '"'];
-  var operador = ["=", "-", "+", "*", "/", ">", "<", "&&", "||"];
-
-  r.array.forEach(element => {
-    
-  });
-}
-
-/***************************************************************************************************************** 
- * COMPROBAR QUE LA LINEA ESTÉ BIEN ESCRITA
-*/
-function comprobar(r){
-  convertirLiga(r);
-}
-
-//console.log(convertirLiga(r));
 
 /********************************************************************************************************* */
 // Creación de listas
@@ -124,7 +102,61 @@ function Node (clase, value) {
     }
     return acum
   }
-  //const linkedlist = new LinkedList();
+  
 
+
+/**********************************************************************************************
+  * COMPROBAR SI ES UN INT O UN FLOAT
+ */
+
+function isInt(n){
+  return Number(n) === n && n % 1 === 0;
+}
+
+function isFloat(n){
+  return Number(n) === n && n % 1 !== 0;
+}
+
+
+/***************************************************************************************************
+ * CONVERTIR LINEA DE TEXTO EN LIGA
+ */
+
+ var r = ["int", "a", ",", "b", ";"]
+
+ function convertirLista(r){
+   var tipo = ["char", "int", "float", "bit", "boolean"];
+   var variable = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+   var separador = [",", ";", '"'];
+   var operador = ["=", "-", "+", "*", "/", ">", "<", "&&", "||"];
  
-  /********************************************************************************************************************* */
+   var lista = new LinkedList();
+ 
+   for(i = 0; i < r.length; i++){
+     if(tipo.includes(r[i])){
+       lista.append("Tipo", r[i]);
+     }
+     else if(variable.includes(r[i].toLowerCase())){
+       lista.append("Variable", r[i]);
+     }
+     else if(separador.includes(r[i])){
+       lista.append("Separador", r[i]);
+     }
+     else if(r[i].isInt || r[i].isFloat){
+       lista.append("Constante", r[i]);
+     }
+     else if(operador.includes(r[i])){
+       lista.append("Operador", r[i])
+     }
+   }
+   return lista;
+ }
+ console.log(convertirLista(r));
+
+
+ /***************************************************************************************************************** 
+ * COMPROBAR QUE LA LINEA ESTÉ BIEN ESCRITA
+*/
+function comprobar(r){
+  convertirLista(r);
+}
