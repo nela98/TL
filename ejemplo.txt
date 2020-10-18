@@ -1,5 +1,5 @@
-int a, b, c;
-My_Number_b -= b;
-n = "Texto de ejemplo;
-n+= 3;
+int a , b , c ;
+My_Number_b - = b ;
+n = " Texto de ejemplo ;
+n + = 3 ;
 a = a + - b

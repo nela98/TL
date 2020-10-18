@@ -5,24 +5,30 @@ function abrir(event){
         reader.onload = function(e){
             let contenido = e.target.result;
             var lines = contenido.split('\n');
-            function convertirLiga(lines);
+            for (i = 0; i<lines.length; i++){
+              console.log(lines[i].split(" "));
+            }
             document.getElementById('contenido').innerText = contenido;
             document.getElementById('resultado').innerText = "Todo malo :D";
         }
         reader.readAsText(archivo);
     }else{
         document.getElementById("mensaje").innerText = "No ha seleccionado archivo"
-    } return lines
+    } 
 }
 
 window.addEventListener("load",()=>{
     document.getElementById("loader").addEventListener("change",abrir)    
 })
 
-//Convertir lineas en listas.
-function convertirLiga(lines){
-  var arreglo =  a;
+//Convertir lineas en ligas.
+var r = ["int a , b , c ;", "my_variable = b ;", "a - = b ;", 'b = " Papa que? " ;'];
+function convertirLiga(r){
+  
+
 }
+
+//console.log(convertirLiga(r));
 
 /********************************************************************************************************* */
 // Creación de listas
