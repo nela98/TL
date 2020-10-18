@@ -6,7 +6,7 @@ function abrir(event){
             let contenido = e.target.result;
             var lines = contenido.split('\n');
             for (i = 0; i<lines.length; i++){
-              convertirLiga(lines[i].split(" "));
+              comprobar(lines[i].split(" "));
             }
             document.getElementById('contenido').innerText = contenido;
             document.getElementById('resultado').innerText = "Todo malo :D";
@@ -21,11 +21,24 @@ window.addEventListener("load",()=>{
     document.getElementById("loader").addEventListener("change",abrir)    
 })
 
-//Convertir lineas en ligas.
-var r = ["int", "a", ",", "b", ",", "c",";"]
+/***************************************************************************************************
+ * CONVERTIR LINEA DE TEXTO EN LIGA
+ */
 function convertirLiga(r){
-  
+  var tipo = ["char", "int", "float", "bit", "boolean"];
+  var separador = [",", ";", '"'];
+  var operador = ["=", "-", "+", "*", "/", ">", "<", "&&", "||"];
 
+  r.array.forEach(element => {
+    
+  });
+}
+
+/***************************************************************************************************************** 
+ * COMPROBAR QUE LA LINEA ESTÉ BIEN ESCRITA
+*/
+function comprobar(r){
+  convertirLiga(r);
 }
 
 //console.log(convertirLiga(r));
@@ -112,11 +125,6 @@ function Node (clase, value) {
     return acum
   }
   //const linkedlist = new LinkedList();
- // linkedlist.append('int',12);
- // console.log(linkedlist);
 
- /* linkedlist.append(27);
-  linkedlist.append(19);
-*/
  
   /********************************************************************************************************************* */
