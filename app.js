@@ -6,7 +6,7 @@ function abrir(event){
             let contenido = e.target.result;
             var lines = contenido.split('\n');
             for (i = 0; i<lines.length; i++){
-              console.log(lines[i].split(" "));
+              convertirLiga(lines[i].split(" "));
             }
             document.getElementById('contenido').innerText = contenido;
             document.getElementById('resultado').innerText = "Todo malo :D";
@@ -22,7 +22,7 @@ window.addEventListener("load",()=>{
 })
 
 //Convertir lineas en ligas.
-var r = ["int a , b , c ;", "my_variable = b ;", "a - = b ;", 'b = " Papa que? " ;'];
+var r = ["int", "a", ",", "b", ",", "c",";"]
 function convertirLiga(r){
   
 
