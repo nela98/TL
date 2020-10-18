@@ -122,11 +122,11 @@ function isFloat(n){
  * CONVERTIR LINEA DE TEXTO EN LIGA
  */
 
- var r = ["int", "a", ",", "b", ";"]
+ var r = ["int", "agua", "=", '"', "a", '"', ";"];
 
  function convertirLista(r){
    var tipo = ["char", "int", "float", "bit", "boolean"];
-   var variable = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+   var variable = new RegExp("^[a-z]")
    var separador = [",", ";", '"'];
    var operador = ["=", "-", "+", "*", "/", ">", "<", "&&", "||"];
  
@@ -136,7 +136,7 @@ function isFloat(n){
      if(tipo.includes(r[i])){
        lista.append("Tipo", r[i]);
      }
-     else if(variable.includes(r[i].toLowerCase())){
+     else if(variable.test(r[i])){
        lista.append("Variable", r[i]);
      }
      else if(separador.includes(r[i])){
