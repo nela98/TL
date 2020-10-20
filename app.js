@@ -222,8 +222,8 @@ function isFloat(n){
 
  }
 
- console.log(verificarParentesis('((()))'));
- console.log(verificarParentesis('(()'));
+ console.log(verificarParentesis('((())))'));
+ console.log(verificarParentesis('(())'));
 
  /***************************************************************************************************************** 
  * COMPROBAR QUE LA LINEA ESTÉ BIEN ESCRITA
