@@ -154,6 +154,7 @@ function isFloat(n){
 /***************************************************************************************************
  * CONVERTIR LINEA DE TEXTO EN LISTA
  */
+var r = ["int", "num2", "=",'"', "aguacate y lechuga",'"', ";"]
 
  var tipo = ["char", "int", "float", "bit", "boolean"];
  var variable = new RegExp("^[0-9a-zA-Z]+$");
@@ -167,6 +168,7 @@ function isFloat(n){
    for(i = 0; i < r.length; i++){
      if(tipo.includes(r[i])){
        lista.append("Tipo", r[i]);
+       console.log(Object.values(lista));
      }
      else if(variable.test(r[i])){
        lista.append("Variable", r[i]);
@@ -223,8 +225,11 @@ function isFloat(n){
 /******************************************************************************************************************
  * ESTADOS
  */
+var lista = new LinkedList();
 function estadoS0(lista){
-  
+  for(i = 0; i < lista.length; i++){
+
+  }
 }
 
  /***************************************************************************************************************** 
