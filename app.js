@@ -155,15 +155,13 @@ function isFloat(n){
  * CONVERTIR LINEA DE TEXTO EN LISTA
  */
 
- var r = ["int", "num2", "=", '"', "aguacate y lechuga", '"', ";"];
+ var tipo = ["char", "int", "float", "bit", "boolean"];
+ var variable = new RegExp("^[0-9a-zA-Z]+$");
+ var separador = [",", ";", '"'];
+ var cadena = new RegExp("[A-Za-z0-9]");
+ var operador = ["=", "-", "+", "*", "/", ">", "<", "&&", "||"];
 
  function convertirLista(r){
-   var tipo = ["char", "int", "float", "bit", "boolean"];
-   var variable = new RegExp("^[0-9a-zA-Z]+$");
-   var separador = [",", ";", '"'];
-   var cadena = new RegExp("[A-Za-z0-9]");
-   var operador = ["=", "-", "+", "*", "/", ">", "<", "&&", "||"];
- 
    var lista = new LinkedList();
  
    for(i = 0; i < r.length; i++){
@@ -222,14 +220,18 @@ function isFloat(n){
 
  }
 
- console.log(verificarParentesis('((())))'));
- console.log(verificarParentesis('(())'));
+/******************************************************************************************************************
+ * ESTADOS
+ */
+function estadoS0(lista){
+  
+}
 
  /***************************************************************************************************************** 
  * COMPROBAR QUE LA LINEA ESTÉ BIEN ESCRITA
 */
 
 function comprobar(r){
-  
-  convertirLista(r);
+  lista = convertirLista(r);
+  console.log(estadoS0(lista));
 }
