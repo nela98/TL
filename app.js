@@ -22,7 +22,7 @@ window.addEventListener("load",()=>{
 })
 
 /********************************************************************************************************* */
-// Creación de listas
+// LISTAS
 
 function Node (clase, value) {
     this.clase = clase
@@ -103,7 +103,40 @@ function Node (clase, value) {
     return acum
   }
   
+/*********************************************************************************************
+ * CREACIÓN DE PILAS
+ */
 
+class Stack {
+  constructor(){
+    this.stack = [];
+  }
+  
+  push(element){
+    this.stack.push(element);
+    return this.stack;
+  }
+
+  pop(){
+    return this.stack.pop();
+  }
+
+  peek(){
+    return this.stack[this.stack.length - 1];
+  }
+
+  size(){
+    return this.stack.length;
+  }
+  isEmpty(){
+    if(this.stack.length == 0){
+      return true;
+    }
+  }
+  print(){
+    console.log(this.stack);
+  }
+}
 
 /**********************************************************************************************
   * COMPROBAR SI ES UN INT O UN FLOAT
@@ -119,7 +152,7 @@ function isFloat(n){
 
 
 /***************************************************************************************************
- * CONVERTIR LINEA DE TEXTO EN LIGA
+ * CONVERTIR LINEA DE TEXTO EN LISTA
  */
 
  var r = ["int", "num2", "=", '"', "aguacate y lechuga", '"', ";"];
@@ -157,10 +190,46 @@ function isFloat(n){
  }
  console.log(convertirLista(r));
 
+/******************************************************************************************************************
+ * VERIFICAR PARENTESIS
+ */
+
+ function verificarParentesis(r){
+   const pila = new Stack();
+   let balanceados = true;
+   var i = 0;
+   while(i < r.length && balanceados){
+     let simbolo = r[i];
+     if (simbolo == "("){
+       pila.push(simbolo);
+     }
+     else{
+       if(pila.isEmpty()){
+         balanceados = false;
+       }
+       else{
+         pila.pop();
+       }
+     }
+     i++;
+   }
+   if(balanceados && pila.isEmpty()){
+     return true;
+   }
+   else{
+     return false;
+   }
+
+ }
+
+ console.log(verificarParentesis('((()))'));
+ console.log(verificarParentesis('(()'));
 
  /***************************************************************************************************************** 
  * COMPROBAR QUE LA LINEA ESTÉ BIEN ESCRITA
 */
+
 function comprobar(r){
+  
   convertirLista(r);
 }
