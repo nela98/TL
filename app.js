@@ -269,35 +269,40 @@ function estadoS0(lista){
           aux = aux.getNext();
           if(aux != null && (aux.getClass() == "Separador") && aux.getValue()==";"){
             if(aux.next==null){
+              console.log("Linea correcta!")
               break;
             }else{
               console.log("Error, luego de ; no deben haber caracteres")
               break;
             }
-          }else if(aux != null && (aux.getClass() == "Separador") && aux.getValue()==","){
+          }
+          //CREA NUEVA LISTA PARA PASAR AL ESTADO S1
+          else if(aux != null && (aux.getClass() == "Separador")){
             while(aux != null){
               listaAux.append(aux.getClass(),aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux);
             break;
-          }else if(aux != null && aux.getClass() == "Operador"){
-            if(aux.getValue() == "+" || aux.getValue() == "-"){
-              while(aux != null){
-                listaAux.append(aux.getClass(), aux.getValue());
-                aux = aux.getNext();
-              }
-              estadoS0(listaAux); 
-              break;
-            }else{
-              console.log("Error, el separador no se encuentra en la posición correcta.")
-              break;
+          }
+          //CREA NUEVA LISTA PARA PASAR AL ESRADO S2
+          else if(aux != null && aux.getClass() == "Operador"){
+            while(aux != null){
+              listaAux.append(aux.getClass(), aux.getValue());
+              aux = aux.getNext();
             }
+            estadoS0(listaAux); 
+            break;
+            
           }else if(aux == null){
             console.log("Error, falta ;");
             break;
           }
-        } break;
+        }else if(aux != null){
+          console.log(`Error, despues de ${aux.getValue()} debe ir una variable.`);
+          break;
+        }break;
+
       //ESTADO S1 Y ESTADO S3  
       case "Separador":
         //ESTADO S1
@@ -306,6 +311,7 @@ function estadoS0(lista){
           if(aux != null && aux.getClass() == "Variable" ){
             aux = aux.getNext();
             if(aux != null && aux.getValue() == ","){
+              //CREA UNA LISTA PARA REGRESAR AL ESTADO S1
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
@@ -313,39 +319,42 @@ function estadoS0(lista){
               estadoS0(listaAux); 
               break;
             }else if(aux !=null && aux.getValue() == ";"){
-              if(aux.getNext() == null){
-                console.log("Todo correcto")
+              if(aux.next == null){
+                console.log("Linea correcta!")
                 break;
               }else{
                 console.log("Error, luego de ; no pueden haber caracteres");
                 break;
               }
             }else if(aux != null && aux.getClass() == "Operador"){
-              if(aux.getValue() == "+" || aux.getValue() == "-"){
-                while(aux != null){
-                  listaAux.append(aux.getClass(), aux.getValue());
-                  aux = aux.getNext();
-                }
-                estadoS0(listaAux); 
-                break;
-              }else{
-                console.log("Error, el separador no se encuentra en la posición correcta.");
-                break;
+              //CREA UNA LISTA PARA PASAR AL ESTADO S2
+              while(aux != null){
+                listaAux.append(aux.getClass(), aux.getValue());
+                aux = aux.getNext();
               }
+              estadoS0(listaAux); 
+              break;
             }else if(aux != null && aux.getClass() == "Tipo"){
-              console.log(`Error, no puede haber un tipo ${aux.getValue()} después de una variable`);
+              console.log(`Error, no puede haber un ${aux.getValue()} después de una variable`);
               break;
             }else if(aux != null && aux.getClass() == "Cadena"){
               console.log("Error, no puede haber una cadena después de una variable.");
               break;
-            }else{
-              console.log("Error, falta ;");
+            }else if (aux != null && aux.getClass() == "Separador"){
+              console.log(`Error, no puede haber un ${aux.getValue()} después de una variable.`);
               break;
             }
+          }else if(aux != null){
+            console.log("Error, después de , debe ir una variable.");
+            break;
           }else if(aux == null){
-            console.log("Error, debe ir el nombre de la variable.");
+            console.log("Error, linea incompleta, debe seguir el nombre de la variable.");
             break;
           }
+          /*if(aux.next == null ){
+            console.log("Error, falta el ;");
+            break;
+          }*/
         }
         //ESTADO S3
         else if(aux != null && aux.getValue() == '"'){
@@ -356,56 +365,51 @@ function estadoS0(lista){
               aux = aux.getNext();
               if(aux != null && aux.getClass() == "Operador"){
                 aux = aux.getNext();
-                if(aux.getValue() == "true" || aux.getValue() == "false"){
+                //CREA UNA NUEVA LISTA PARA PASAR AL ESTADO S4 (VERIFICAR SI ES TRUE || FALSE O UN NUMERO)
+                if(aux != null && aux.getClass() == "Cadena"){ //Puede que tengamos que crear un array de numeros.
                   while(aux != null){
                     listaAux.append(aux.getClass(), aux.getValue());
                     aux = aux.getNext();
                   }
                   estadoS0(listaAux);
                   break;
-                }else if(aux != null && aux.getClass() == "Cadena"){ //Puede que tengamos que crear un array de numeros.
-                  while(aux != null){
-                    listaAux.append(aux.getClass(), aux.getValue());
-                    aux = aux.getNext();
-                  }
-                  estadoS0(listaAux);
-                  break;
-                }else if(aux != null && aux.getValue() == ";"){
-                  if(aux.next == null){
-                    break;
-                  }else{
-                    console.log("Error, despues del ';' no pueden haber más caracteres");
-                    break;
-                  }
-                }else{
-                  console.log(`Error, no puede haber un/a ${aux.getClass()} después de un operador`);
+                }else if(aux != null){
+                  console.log(`Error, no puede haber un ${aux.getValue()} después de un operador`);
                   break;
                 }
-              }else{
-                console.log(`Error, no puede haber un/a ${aux.getClass()} después de " `);
+              }else if(aux != null && aux.getValue() == ";"){
+                if(aux.next == null){
+                  console.log("Linea correcta!");
+                  break;
+                }else if(aux != null){
+                  console("Error, no puede haber ningún otro valor despues de ;");
+                  break;
+                }                
+              }else if(aux != null){
+                console.log(`Error, no puede haber un ${aux.getValue()} después del segundo " `);
                 break;
               }
-            }else{
+            }else if(aux != null){
               console.log('Error, falta una "');
               break;
             }
           }
+        }else if(aux != null){
+          console.log(`Error, no se permite un ${aux.getValue()} en esa posición`);
+          break;
         }break;
       
       case "Operador":
         //ESTADO S2
-        if(aux == null){
-          break;
-        }
-        if(aux.getValue() != "+" || aux.getValue() != "-" || aux.getValue() != "="){
+        if( aux != null && aux.getValue() != "+" || aux.getValue() != "-" || aux.getValue() != "="){
           console.log("Error, el operador no está permitido en esta posición.");
           break;
         }
-        aux = aux.getNext();
-        if(aux != null && (aux.getValue() == "+" || aux.getValue() == "-")){
+        else if(aux != null && (aux.getValue() == "+" || aux.getValue() == "-")){
           aux = aux.getNext();
           if(aux != null && aux.getValue() == "="){
             aux = aux.getNext();
+            //CREAR LISTA PARA PASAR AL ESTADO S3
             if(aux != null && aux.getValue() == '"'){
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
@@ -413,46 +417,51 @@ function estadoS0(lista){
               }
               estadoS0(listaAux); 
               break;
-            }else if(aux != null && (aux.getValue() == "true" || aux.getValue() == "false")){ //¿SOBRA?
+            }else if(aux != null && aux.getClass() == "Variable"){ 
+              //CREAR LISTA PARA PASAR AL ESTADO S5
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
               }
               estadoS0(listaAux);
               break;
-            }else if(aux != null && aux.getClass() == "Cadena"){ // I think we should change this for a variable.
+            }else if(aux != null && aux.getClass() == "Cadena"){
+              //CREAR LISTA PARA PASAR AL ESTADO S4
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
               }
               estadoS0(listaAux);
               break;
-            }else{
+            }else if(aux != null){
               console.log(`Error, ${aux.getValue()} no está permitido después de un =`);
               break;
             }
           }
-          else{
+          else if(aux != null){
             console.log(`Error, no puede haber un/a ${aux.getClass()} después de un + `);
             break;
           }
         }else if(aux != null && aux.getValue() == "="){
           aux = aux.getNext();
           if(aux != null && aux.getValue() == '"'){
+            //CREAR LISTA PARA PASAR AL ESTADO S3
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux); 
             break;
-          }else if(aux != null && (aux.getValue() == "true" || aux.getValue() == "false")){ // innecesario
+          }else if(aux != null && aux.getClass() == "Variable"){ 
+            //CREAR LISTA PARA PASARLA AL ESTADO S5
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux);
             break;
-          }else if(aux != null && aux.getClass() == "Cadena"){ //Variable
+          }else if(aux != null && aux.getClass() == "Cadena"){ 
+            //CREAR LISTA PARA PASAR AL ESTADO S4
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
@@ -460,7 +469,7 @@ function estadoS0(lista){
             estadoS0(listaAux);
             break;
           }
-        }else{
+        }else if(aux != null){
           console.log(`Error, ${aux.getValue()} no está permitido despuése de un =`);
           break;
         }break;
@@ -469,36 +478,51 @@ function estadoS0(lista){
         //ESTADO S4
         if(aux != null && (aux.getValue() == "true" || aux.getValue() == "false")){
           aux = aux.getNext();
-          if(aux.getValue() == ";"){
+          if( aux != null && aux.getValue() == ";"){
             if(aux.next == null){
+              console.log("Linea correcta!");
               break;
-            }else{
+            }else if(aux != null){
               console.log("Error, despues del ';' no pueden haber más caracteres");
               break;
             }
-          }//Falta considerar otros estados
-          else{
-            console.log(`Error,${aux.getClass()} no está permitida en esa posición.`);
+          }else if(aux != null && aux.getClass() == "Operador"){
+            aux = aux.getNext();
+            if(aux != null && aux.getClass() == "Variable"){
+              //CREAR LISTA PARA PASAR AL ESTADO S5
+              while(aux != null){
+                listaAux.append(aux.getClass(), aux.getValue());
+                aux = aux.getNext();
+              }
+              estadoS0(listaAux);
+              break;
+            }else if(aux != null && aux.getClass() == "Cadena"){
+              while(aux != null){
+                listaAux.append(aux.getClass(), aux.getValue());
+                aux = aux.getNext();
+              }
+              estadoS0(listaAux);
+              break;
+            }
+          }else if(aux != null){
+            console.log(`Error,${aux.getValue()} no está permitida en esa posición.`);
             break;
           }
-        }
-        //ESTADO S5 may be wrong, acá solo se aceptan números.
         //Buscar expresión regular que acepte números.
-        aux = aux.getNext();
-        if(aux != null && aux.getValue() == ";"){
-          if(aux.next == null){
-            break;
-          }else{
-            console.log("Error, despues del ';' no pueden haber más caracteres");
-            break;
-          }
+        }else if(aux != null){
+          console.log("Error, cadena no permitida.");
+          break;
         }
+        break;
+
+        
       //ESTADO S5
       case "Variable":
         aux = aux.getNext();
         if(aux != null && aux.getClass() == "Operador"){
           aux = aux.getNext();
           if(aux != null && aux.getClass() == "Variable"){
+            //CREAR LISTA PARA PASAR AL ESTADO S5
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
@@ -506,6 +530,7 @@ function estadoS0(lista){
             estadoS0(listaAux);
             break;
           }else if(aux != null && aux.getClass()  == "Cadena"){
+            //CREAR LISTA PARA PASAR AL ESTADO S4
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
@@ -513,29 +538,31 @@ function estadoS0(lista){
             estadoS0(listaAux);
             break;
           }else if(aux != null && aux.getValue() == '"'){
+            //CREAR LISTA PARA PASAR AL ESTADO S3
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux);
             break;
-          }else{
+          }else if(aux != null){
             console.log(`Error, ${aux.getValue()} no es permitido después de un operador.`);
             break;
           }
         }else if(aux != null && aux.getValue() == ";"){
           if(aux.next == null){
+            console.log("Linea correcta!");
             break;
           }else{
             console.log("Error, despues del ';' no pueden haber más caracteres");
             break;
           }
         }else{
-          console.log(`Error, clase no  permitida después de una variable`);
+          console.log(`Error, valor no  permitido después de una variable`);
           break;
-        }
+        }break;
         
-
+        //FALTA CREAR LA PARTE CUANDO INGRESA PRIMERO LA VARIABLE EN EL ESTADO S0
 
     }       
     
