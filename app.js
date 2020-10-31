@@ -256,29 +256,29 @@ function estadoS0(lista){
   let valor, clase;
   aux = lista.peekNode();
   let long = lista.length();
-  for(i=0; i<long; i++){
+  for(let i=0; i<long; i++){
     clase = aux.getClass();
     switch (clase){
       //ESTADO S0
       case "Tipo": 
         aux = aux.getNext();
-        if(aux.getClass() == "Variable"){
+        if(aux != null && aux.getClass() == "Variable"){
           aux = aux.getNext();
-          if((aux.getClass() == "Separador") && aux.getValue()==";"){
+          if(aux != null && (aux.getClass() == "Separador") && aux.getValue()==";"){
             if(aux.next==null){
               break;
             }else{
               console.log("Error, luego de ; no deben haber caracteres")
               break;
             }
-          }else if((aux.getClass() == "Separador") && aux.getValue()==","){
+          }else if(aux != null && (aux.getClass() == "Separador") && aux.getValue()==","){
             while(aux != null){
               listaAux.append(aux.getClass(),aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux);
             break;
-          }else if(aux.getClass() == "Operador"){
+          }else if(aux != null && aux.getClass() == "Operador"){
             if(aux.getValue() == "+" || aux.getValue() == "-"){
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
@@ -298,28 +298,34 @@ function estadoS0(lista){
       //ESTADO S1 Y ESTADO S3  
       case "Separador":
         //ESTADO S1
-        if (aux.getValue() == ","){
+        if (aux != null && aux.getValue() == ","){
+          console.log(aux);
           aux = aux.getNext();
-          if(aux.getClass() == "Variable"){
-            aux = aux.getNext();
+          console.log(aux.getValue());
+          if(aux != null && aux.getClass() == "Variable" ){
             console.log(aux.getValue());
-            if(aux.getValue() == ","){
+            aux = aux.getNext();
+            console.log(aux);
+            if(aux != null && aux.getValue() == ","){
               console.log(aux.getValue());
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
               }
+              console.log(listaAux);
               estadoS0(listaAux); 
+              console.log(listaAux);
               break;
             }
-            else if(aux.getClass() == "Separador" && aux.getValue() == ";"){
-              if(aux.next == null){
+            else if(aux.getValue() == ";"){
+              if(aux.getNext() == null){
+                console.log("Todo correcto")
                 break;
               }else{
                 console.log("Error, luego de ; no pueden haber caracteres");
                 break;
               }
-            }else if(aux.getClass() == "Operador"){
+            }else if(aux != null && aux.getClass() == "Operador"){
               if(aux.getValue() == "+" || aux.getValue() == "-"){
                 while(aux != null){
                   listaAux.append(aux.getClass(), aux.getValue());
@@ -331,26 +337,29 @@ function estadoS0(lista){
                 console.log("Error, el separador no se encuentra en la posición correcta.");
                 break;
               }
-            }else if(aux.getClass() == "Tipo"){
+            }else if(aux != null && aux.getClass() == "Tipo"){
               console.log(`Error, no puede haber un tipo ${aux.getValue()} después de una variable`);
               break;
-            }else if(aux.getClass() == "Cadena"){
+            }else if(aux != null && aux.getClass() == "Cadena"){
               console.log("Error, no puede haber una cadena después de una variable.");
               break;
+            }else{
+              console.log("Error, falta ;");
+              break;
             }
-          }else{
-            console.log(`Error, no puede haber un ${aux.getValue} después de ,`);
+          }else if(aux == null){
+            console.log(`Error, debe ir el nombre de la variable.`);
             break;
           }
         }
         //ESTADO S3
-        else if(aux.getValue() == '"'){
+        else if(aux != null && aux.getValue() == '"'){
           aux = aux.getNext();
-          if(aux.getClass() == "Cadena"){
+          if(aux != null && aux.getClass() == "Cadena"){
             aux = aux.getNext();
-            if(aux.getValue() == '"'){
+            if(aux != null && aux.getValue() == '"'){
               aux = aux.getNext();
-              if(aux.getClass() == "Operador"){
+              if(aux != null && aux.getClass() == "Operador"){
                 aux = aux.getNext();
                 if(aux.getValue() == "true" || aux.getValue() == "false"){
                   while(aux != null){
@@ -359,14 +368,14 @@ function estadoS0(lista){
                   }
                   estadoS0(listaAux);
                   break;
-                }else if(aux.getClass() == "Cadena"){ //Puede que tengamos que crear un array de numeros.
+                }else if(aux != null && aux.getClass() == "Cadena"){ //Puede que tengamos que crear un array de numeros.
                   while(aux != null){
                     listaAux.append(aux.getClass(), aux.getValue());
                     aux = aux.getNext();
                   }
                   estadoS0(listaAux);
                   break;
-                }else if(aux.getValue() == ";"){
+                }else if(aux != null && aux.getValue() == ";"){
                   if(aux.next == null){
                     break;
                   }else{
