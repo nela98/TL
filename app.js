@@ -7,7 +7,7 @@ function abrir(event){
           var lines = contenido.split('\n');
           document.getElementById('contenido').innerText = contenido;
           document.getElementById('resultado').innerText = "Revisa la consola";
-          for (i = 0; i<lines.length; i++){
+          for (let i = 0; i<lines.length; i++){
             linea = lines[i].split(" ")
             console.log(linea)
             comprobar(linea)
@@ -253,10 +253,13 @@ function verificarParentesis(r){
 function estadoS0(lista){
   let listaAux = new LinkedList();
   let aux = new Node();
-  let valor, clase;
+  let clase;
   aux = lista.peekNode();
   let long = lista.length();
   for(let i=0; i<long; i++){
+    if(aux == null){
+      break;  
+    }
     clase = aux.getClass();
     switch (clase){
       //ESTADO S0
@@ -290,7 +293,7 @@ function estadoS0(lista){
               console.log("Error, el separador no se encuentra en la posición correcta.")
               break;
             }
-          }else if(aux.next == null){
+          }else if(aux == null){
             console.log("Error, falta ;");
             break;
           }
@@ -299,25 +302,17 @@ function estadoS0(lista){
       case "Separador":
         //ESTADO S1
         if (aux != null && aux.getValue() == ","){
-          console.log(aux);
           aux = aux.getNext();
-          console.log(aux.getValue());
           if(aux != null && aux.getClass() == "Variable" ){
-            console.log(aux.getValue());
             aux = aux.getNext();
-            console.log(aux);
             if(aux != null && aux.getValue() == ","){
-              console.log(aux.getValue());
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
               }
-              console.log(listaAux);
               estadoS0(listaAux); 
-              console.log(listaAux);
               break;
-            }
-            else if(aux.getValue() == ";"){
+            }else if(aux !=null && aux.getValue() == ";"){
               if(aux.getNext() == null){
                 console.log("Todo correcto")
                 break;
@@ -348,7 +343,7 @@ function estadoS0(lista){
               break;
             }
           }else if(aux == null){
-            console.log(`Error, debe ir el nombre de la variable.`);
+            console.log("Error, debe ir el nombre de la variable.");
             break;
           }
         }
@@ -399,30 +394,33 @@ function estadoS0(lista){
       
       case "Operador":
         //ESTADO S2
+        if(aux == null){
+          break;
+        }
         if(aux.getValue() != "+" || aux.getValue() != "-" || aux.getValue() != "="){
           console.log("Error, el operador no está permitido en esta posición.");
           break;
         }
         aux = aux.getNext();
-        if(aux.getValue() == "+" || aux.getValue() == "-"){
+        if(aux != null && (aux.getValue() == "+" || aux.getValue() == "-")){
           aux = aux.getNext();
-          if(aux.getValue() == "="){
+          if(aux != null && aux.getValue() == "="){
             aux = aux.getNext();
-            if(aux.getValue() == '"'){
+            if(aux != null && aux.getValue() == '"'){
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
               }
               estadoS0(listaAux); 
               break;
-            }else if(aux.getValue() == "true" || aux.getValue() == "false"){ //¿SOBRA?
+            }else if(aux != null && (aux.getValue() == "true" || aux.getValue() == "false")){ //¿SOBRA?
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
               }
               estadoS0(listaAux);
               break;
-            }else if(aux.getClass() == "Cadena"){ // I think we should change this for a variable.
+            }else if(aux != null && aux.getClass() == "Cadena"){ // I think we should change this for a variable.
               while(aux != null){
                 listaAux.append(aux.getClass(), aux.getValue());
                 aux = aux.getNext();
@@ -438,23 +436,23 @@ function estadoS0(lista){
             console.log(`Error, no puede haber un/a ${aux.getClass()} después de un + `);
             break;
           }
-        }else if(aux.getValue() == "="){
+        }else if(aux != null && aux.getValue() == "="){
           aux = aux.getNext();
-          if(aux.getValue() == '"'){
+          if(aux != null && aux.getValue() == '"'){
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux); 
             break;
-          }else if(aux.getValue() == "true" || aux.getValue() == "false"){ // innecesario
+          }else if(aux != null && (aux.getValue() == "true" || aux.getValue() == "false")){ // innecesario
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux);
             break;
-          }else if(aux.getClass() == "Cadena"){ //Variable
+          }else if(aux != null && aux.getClass() == "Cadena"){ //Variable
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
@@ -469,7 +467,7 @@ function estadoS0(lista){
 
       case "Cadena":
         //ESTADO S4
-        if(aux.getValue() == "true" || aux.getValue() == "false"){
+        if(aux != null && (aux.getValue() == "true" || aux.getValue() == "false")){
           aux = aux.getNext();
           if(aux.getValue() == ";"){
             if(aux.next == null){
@@ -487,7 +485,7 @@ function estadoS0(lista){
         //ESTADO S5 may be wrong, acá solo se aceptan números.
         //Buscar expresión regular que acepte números.
         aux = aux.getNext();
-        if(aux.getValue() == ";"){
+        if(aux != null && aux.getValue() == ";"){
           if(aux.next == null){
             break;
           }else{
@@ -498,23 +496,23 @@ function estadoS0(lista){
       //ESTADO S5
       case "Variable":
         aux = aux.getNext();
-        if(aux.getClass() == "Operador"){
+        if(aux != null && aux.getClass() == "Operador"){
           aux = aux.getNext();
-          if(aux.getClass() == "Variable"){
+          if(aux != null && aux.getClass() == "Variable"){
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux);
             break;
-          }else if(aux.getClass()  == "Cadena"){
+          }else if(aux != null && aux.getClass()  == "Cadena"){
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
             }
             estadoS0(listaAux);
             break;
-          }else if(aux.getValue() == '"'){
+          }else if(aux != null && aux.getValue() == '"'){
             while(aux != null){
               listaAux.append(aux.getClass(), aux.getValue());
               aux = aux.getNext();
@@ -525,7 +523,7 @@ function estadoS0(lista){
             console.log(`Error, ${aux.getValue()} no es permitido después de un operador.`);
             break;
           }
-        }else if(aux.getValue() == ";"){
+        }else if(aux != null && aux.getValue() == ";"){
           if(aux.next == null){
             break;
           }else{
@@ -533,7 +531,7 @@ function estadoS0(lista){
             break;
           }
         }else{
-          console.log(`Error, ${Aux.getClass()} no está permitido después de una variable`);
+          console.log(`Error, clase no  permitida después de una variable`);
           break;
         }
         
@@ -544,19 +542,7 @@ function estadoS0(lista){
   }
 }
 //console.log(estadoS0(nueva));
-/*
 
-function estadoS0(lista){
-  let aux = new Node();
-  let valor;
-  aux = lista.peekNode();
-  let long = lista.length();
-  for(i=0; i<long; i++){
-    valor = aux.getValue();
-    aux = aux.getNext(); 
-  }
-  return valor
-}
 
 
 /***************************************************************************************************************** 
@@ -566,7 +552,5 @@ function estadoS0(lista){
 function comprobar(listaC){
   var listaComp = new LinkedList();
   listaComp = convertirLista(listaC);
-  //return estadoS0(listaComp); 
-  //console.log(listaComp)
   console.log(estadoS0(listaComp));
 }
