@@ -343,6 +343,9 @@ function estadoS0(lista){
             }else if (aux != null && aux.getClass() == "Separador"){
               console.log(`Error, no puede haber un ${aux.getValue()} después de una variable.`);
               break;
+            }else if(aux == null){
+              console.log("Error, falta el ;");
+              break;
             }
           }else if(aux != null){
             console.log("Error, después de , debe ir una variable.");
@@ -351,10 +354,6 @@ function estadoS0(lista){
             console.log("Error, linea incompleta, debe seguir el nombre de la variable.");
             break;
           }
-          /*if(aux.next == null ){
-            console.log("Error, falta el ;");
-            break;
-          }*/
         }
         //ESTADO S3
         else if(aux != null && aux.getValue() == '"'){
