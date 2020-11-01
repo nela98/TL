@@ -192,7 +192,6 @@ function convertirLista(r){
   for(i = 0; i < r.length; i++){
     if(tipo.includes(r[i])){
       lista.append("Tipo", r[i]);
-      console.log(Object.values(lista));
     }
     else if(variable.test(r[i])){
       lista.append("Variable", r[i]);
@@ -212,8 +211,6 @@ function convertirLista(r){
   }
   return lista;
 }
-//let nueva = (convertirLista(r));
-//console.log(nueva);
 
 /******************************************************************************************************************
 * VERIFICAR PARENTESIS
@@ -354,7 +351,7 @@ function estadoS0(lista){
               if(aux != null && aux.getClass() == "Operador"){
                 aux = aux.getNext();
                 //CREA UNA NUEVA LISTA PARA PASAR AL ESTADO S4 (VERIFICAR SI ES TRUE || FALSE O UN NUMERO)
-                if(aux != null && aux.getClass() == "Cadena"){ //Puede que tengamos que crear un array de numeros.
+                if(aux != null && aux.getClass() == "Cadena"){ 
                   while(aux != null){
                     listaAux.append(aux.getClass(), aux.getValue());
                     aux = aux.getNext();
@@ -383,7 +380,7 @@ function estadoS0(lista){
           return console.log(`Error, no se permite un ${aux.getValue()} en esa posición`);
         }break;
       
-      case "Operador":
+      case  "Operador":
         //ESTADO S2
         if( aux != null && aux.getValue() != "+" || aux.getValue() != "-" || aux.getValue() != "="){
           console.log("Error, el operador no está permitido en esta posición.");
@@ -486,7 +483,6 @@ function estadoS0(lista){
           }else if(aux != null){
             return console.log(`Error,${aux.getValue()} no está permitida en esa posición.`);
           }
-        //Buscar expresión regular que acepte números.
         }else if(aux != null){
           return console.log("Error, cadena no permitida.");
         }
@@ -568,9 +564,6 @@ function estadoS0(lista){
     
   }
 }
-//console.log(estadoS0(nueva));
-
-
 
 /***************************************************************************************************************** 
 * COMPROBAR QUE LA LINEA ESTÉ BIEN ESCRITA
@@ -579,5 +572,6 @@ function estadoS0(lista){
 function comprobar(listaC){
   var listaComp = new LinkedList();
   listaComp = convertirLista(listaC);
+  console.log(listaComp);
   console.log(estadoS0(listaComp));
 }
